@@ -8,9 +8,8 @@ import (
 // Client interface for generating embeddings
 type Client interface {
 	CreateEmbedding(text string) ([]float32, error)
-	BatchCreateEmbeddings(texts []string) ([][]float32, error) // Batch embedding generation
-	GetModelName() string                                      // Returns the model name/identifier being used
-	GetDimensions() int                                        // Returns the embedding dimensions for this model
+	GetModelName() string // Returns the model name/identifier being used
+	GetDimensions() int   // Returns the embedding dimensions for this model
 }
 
 // NewClient creates a new embedding client based on the provided configuration

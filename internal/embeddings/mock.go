@@ -128,18 +128,3 @@ func (m *MockClient) GetDimensions() int {
 func (m *MockClient) SetDimensions(dims int) {
 	m.dimensions = dims
 }
-
-// BatchCreateEmbeddings generates embeddings for multiple texts (for testing batch operations)
-func (m *MockClient) BatchCreateEmbeddings(texts []string) ([][]float32, error) {
-	embeddings := make([][]float32, len(texts))
-
-	for i, text := range texts {
-		embedding, err := m.CreateEmbedding(text)
-		if err != nil {
-			return nil, fmt.Errorf("failed to create embedding for text %d: %w", i, err)
-		}
-		embeddings[i] = embedding
-	}
-
-	return embeddings, nil
-}
