@@ -1,0 +1,57 @@
+# Multi-stage build for Go Code Graph MCP Server
+FROM golang:1.24.3-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Install build dependencies
+RUN apk add --no-cache git
+
+# Copy go mod files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the MCP server binary
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o mcp-server ./cmd/mcp-server
+
+# Final stage - golang:alpine image (includes Go toolchain for analyze_workspace)
+FROM golang:1.24.3-alpine
+
+# Install ca-certificates and git for Go operations
+RUN apk --no-cache add ca-certificates tzdata git
+
+# Create non-root user
+RUN addgroup -g 1001 -S mcpserver && \
+    adduser -u 1001 -S mcpserver -G mcpserver
+
+# Set working directory
+WORKDIR /home/mcpserver
+
+# Copy binary from builder stage
+COPY --from=builder /app/mcp-server .
+
+# Change ownership to non-root user
+RUN chown mcpserver:mcpserver mcp-server
+
+# Switch to non-root user
+USER mcpserver
+
+# Expose health check port (optional)
+EXPOSE 8080
+
+# Set default environment variables
+ENV NEO4J_URI=bolt://localhost:7687
+ENV NEO4J_USER=neo4j
+ENV NEO4J_PASSWORD=password
+ENV VERBOSE=false
+
+# Ensure Go is in PATH for non-root user
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+# Run the MCP server
+CMD ["./mcp-server"]

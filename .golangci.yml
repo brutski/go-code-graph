@@ -1,0 +1,49 @@
+version: "2"
+linters:
+  enable:
+    - copyloopvar
+    - gochecknoglobals
+    - gochecknoinits
+    - goconst
+    - gocyclo
+    - gosec
+  settings:
+    goconst:
+      min-len: 2
+      min-occurrences: 2
+    gocyclo:
+      min-complexity: 20
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - errcheck
+          - goconst
+        path: _test.go
+      - linters:
+          - gochecknoglobals
+        path: main.go
+      - linters:
+          - staticcheck
+        text: SA4006
+      - linters:
+          - gosec
+        text: G104
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

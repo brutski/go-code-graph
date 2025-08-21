@@ -1,0 +1,44 @@
+# Ignore unnecessary files for Docker build
+.git/
+.gitignore
+*.md
+README.md
+LICENSE
+
+# Ignore build artifacts
+bin/
+*.log
+*.tmp
+
+# Ignore Neo4j data
+neo4j/data/
+neo4j/logs/
+neo4j/import/
+neo4j/plugins/
+
+# Ignore Docker files (except Dockerfile.mcp)
+docker-compose.yml
+Dockerfile
+!Dockerfile.mcp
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore test files
+*_test.go
+testdata/
+
+# Ignore web assets (not needed for MCP server)
+web/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore example/demo files
+examples/
+demos/

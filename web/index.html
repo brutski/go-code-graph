@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Graph Visualization</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Code Graph Visualization</h1>
+            <p class="subtitle">Interactive analysis of your Go codebase structure</p>
+        </header>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>📊 Graph Data Available</h3>
+            </div>
+            <div class="card-content">
+                <p>Your code graph has been generated and is ready for visualization.</p>
+                <p class="graph-info">Graph file: <code id="graph-file">Loading...</code></p>
+                <div class="stats-container" id="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-number" id="node-count">-</span>
+                        <span class="stat-label">Nodes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="edge-count">-</span>
+                        <span class="stat-label">Edges</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="package-count">-</span>
+                        <span class="stat-label">Packages</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="/visualization" class="button button-primary">
+                🎯 View Interactive Graph
+            </a>
+            <a href="/api/graph" class="button button-secondary" target="_blank">
+                📁 View Raw Graph Data
+            </a>
+            <a href="/api/summary" class="button button-secondary" target="_blank">
+                📋 View Summary
+            </a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>🚀 Features</h3>
+            </div>
+            <div class="card-content">
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔗</div>
+                        <div class="feature-content">
+                            <h4>Relationship Mapping</h4>
+                            <p>Visualize function calls, imports, and type relationships</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-content">
+                            <h4>Color-Coded Types</h4>
+                            <p>Different colors for packages, structs, interfaces, and functions</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-content">
+                            <h4>Interactive Exploration</h4>
+                            <p>Click, zoom, search, and filter to explore your codebase</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-content">
+                            <h4>Complexity Analysis</h4>
+                            <p>Node sizes represent complexity and importance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Built with <a href="https://js.cytoscape.org/" target="_blank">Cytoscape.js</a> • 
+               Powered by Go static analysis</p>
+        </footer>
+    </div>
+
+    <script>
+        // Load summary data to populate stats
+        fetch('/api/summary')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('node-count').textContent = data.total_nodes;
+                document.getElementById('edge-count').textContent = data.total_edges;
+                document.getElementById('package-count').textContent = data.statistics.package_count;
+            })
+            .catch(err => {
+                console.error('Failed to load summary:', err);
+            });
+    </script>
+</body>
+</html>

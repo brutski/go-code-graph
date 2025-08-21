@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Code Graph</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+</head>
+<body>
+    <div class="viz-container">
+        <div class="viz-header">
+            <div>
+                <span class="viz-title">🎯 Enhanced Code Graph</span>
+                <a href="/" style="margin-left: 20px; color: #6c757d; text-decoration: none; font-size: 0.9rem;">← Back to Home</a>
+            </div>
+            <div class="viz-controls">
+                <div class="control-group">
+                    <label>Filter:</label>
+                    <select id="node-filter">
+                        <option value="packages-types" selected>Packages & Types</option>
+                        <option value="all">All Nodes</option>
+                        <option value="package">Packages Only</option>
+                        <option value="struct">Structs Only</option>
+                        <option value="interface">Interfaces Only</option>
+                        <option value="function">Functions Only</option>
+                        <option value="method">Methods Only</option>
+                        <option value="field">Fields Only</option>
+                        <option value="parameter">Parameters Only</option>
+                        <option value="constant">Constants Only</option>
+                        <option value="variable">Variables Only</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Visibility:</label>
+                    <select id="visibility-filter">
+                        <option value="all">All</option>
+                        <option value="public">Public Only</option>
+                        <option value="private">Private Only</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Complexity:</label>
+                    <input type="range" id="complexity-filter" min="0" max="20" value="0" step="1">
+                    <span id="complexity-value">0+</span>
+                </div>
+                <div class="control-group">
+                    <label>Layout:</label>
+                    <select id="layout-selector">
+                        <option value="cose">COSE (Default)</option>
+                        <option value="circle">Circle</option>
+                        <option value="grid">Grid</option>
+                        <option value="breadthfirst">Breadth First</option>
+                        <option value="concentric">Concentric</option>
+                    </select>
+                </div>
+                <div class="control-group" style="position: relative;">
+                    <label>Search:</label>
+                    <input type="text" id="search-input" placeholder="Search nodes..." autocomplete="off">
+                    <div id="search-results" class="search-results" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="viz-content">
+            <div class="main-graph">
+                <div id="cy">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        Loading enhanced graph data...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Side Panel -->
+            <div class="side-panel" id="side-panel">
+                <div class="panel-tabs">
+                    <button class="panel-tab active" data-tab="info">
+                        📋 Node Info
+                    </button>
+                    <button class="panel-tab" data-tab="analytics">
+                        📊 Analytics
+                    </button>
+                </div>
+                
+                <div class="panel-content">
+                    <!-- Node Info Tab -->
+                    <div class="tab-content" id="info-tab">
+                        <div class="node-info empty" id="node-info">
+                            <p>Select a node to view detailed information</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Tab -->
+                    <div class="tab-content" id="analytics-tab" style="display: none;">
+                        <div class="analytics-panel" id="analytics-panel">
+                            <div class="metric-card">
+                                <div class="metric-title">Graph Overview</div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Total Nodes</span>
+                                        <span class="info-value" id="total-nodes">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Total Edges</span>
+                                        <span class="info-value" id="total-edges">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Packages</span>
+                                        <span class="info-value" id="package-count">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Avg Complexity</span>
+                                        <span class="info-value" id="avg-complexity">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-title">Node Types Distribution</div>
+                                <div id="node-types-chart" class="metric-chart"></div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-title">Complexity Distribution</div>
+                                <div id="complexity-chart" class="metric-chart"></div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-title">Most Connected Nodes</div>
+                                <div id="connected-nodes"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel Toggle Button -->
+            <button class="panel-toggle" id="panel-toggle" title="Toggle Side Panel">
+                📊
+            </button>
+        </div>
+    </div>
+    
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+    
+    <!-- Context Menu -->
+    <div class="context-menu" id="context-menu" style="display: none;">
+        <div class="context-menu-item" id="focus-node">Focus on Node</div>
+        <div class="context-menu-item" id="show-neighbors">Show Neighbors</div>
+        <div class="context-menu-item" id="hide-node">Hide Node</div>
+        <div class="context-menu-item" id="copy-name">Copy Name</div>
+    </div>
+    
+    <script src="/static/js/graph.js"></script>
+</body>
+</html>
