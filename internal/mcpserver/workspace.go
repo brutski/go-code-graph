@@ -773,12 +773,12 @@ func (s *Server) prepareIncrementalUpdate(ctx context.Context, workspaceName str
 // analyzeAndCreateGraph analyzes the codebase and creates the graph
 func (s *Server) analyzeAndCreateGraph(workspacePath string, allowedPackages []string) (*analyzer.Graph, *analyzer.Parser, error) {
 	parser := analyzer.NewParser(s.embeddingsGenerator, s.logger)
-	
+
 	if len(allowedPackages) > 0 {
 		parser.SetAllowedPackages(allowedPackages)
 		s.logger.Info("Including external packages", "packages", allowedPackages)
 	}
-	
+
 	graph, err := parser.AnalyzeCodebase(workspacePath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to analyze codebase: %w", err)

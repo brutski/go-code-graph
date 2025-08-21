@@ -83,32 +83,6 @@ func (b *BedrockClient) CreateEmbedding(text string) ([]float32, error) {
 	return response.Embedding, nil
 }
 
-// BatchCreateEmbeddings generates embeddings for multiple texts efficiently
-func (b *BedrockClient) BatchCreateEmbeddings(texts []string) ([][]float32, error) {
-	embeddings := make([][]float32, len(texts))
-
-	// Process in batches to avoid overwhelming the API
-	batchSize := 10 // Reasonable batch size for Bedrock
-
-	for i := 0; i < len(texts); i += batchSize {
-		end := i + batchSize
-		if end > len(texts) {
-			end = len(texts)
-		}
-
-		// Process batch
-		for j := i; j < end; j++ {
-			embedding, err := b.CreateEmbedding(texts[j])
-			if err != nil {
-				return nil, fmt.Errorf("failed to create embedding for text %d: %w", j, err)
-			}
-			embeddings[j] = embedding
-		}
-	}
-
-	return embeddings, nil
-}
-
 // GetModelName returns the model name/identifier being used
 func (b *BedrockClient) GetModelName() string {
 	return b.model

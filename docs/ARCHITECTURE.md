@@ -125,7 +125,6 @@ Provider-agnostic semantic embedding generation for enhanced code understanding.
 ```go
 type Client interface {
     CreateEmbedding(text string) ([]float32, error)
-    BatchCreateEmbeddings(texts []string) ([][]float32, error)
     GetModelName() string
     GetDimensions() int
 }
@@ -353,14 +352,12 @@ sequenceDiagram
 #### Embedding Performance Optimization
 
 ```go
-// Batch processing for large codebases
+// Process embeddings for large codebases
 texts := extractSemanticSummaries(nodes)
-embeddings, err := client.BatchCreateEmbeddings(texts)
-
-// Performance comparison (1000 nodes)
-// Individual: 1,000 API calls, ~10 minutes
-// Batch (50): 20 API calls, ~2 minutes (80% faster)
-// Batch (100): 10 API calls, ~1.5 minutes (85% faster)
+for _, text := range texts {
+    embedding, err := client.CreateEmbedding(text)
+    // Process embedding...
+}
 ```
 
 ### 2. Database Performance
@@ -612,10 +609,6 @@ type NewProviderClient struct {
 
 func (n *NewProviderClient) CreateEmbedding(text string) ([]float32, error) {
     // Implementation
-}
-
-func (n *NewProviderClient) BatchCreateEmbeddings(texts []string) ([][]float32, error) {
-    // Batch implementation
 }
 
 func (n *NewProviderClient) GetModelName() string { return n.model }
