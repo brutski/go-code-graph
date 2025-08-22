@@ -211,6 +211,8 @@ make build
 ./bin/import-neo4j -graph=graph.json -clear
 ```
 
+<img width="1686" height="958" alt="Screenshot 2025-08-21 at 20 37 33" src="https://github.com/user-attachments/assets/f4e91dea-287a-47c6-a9f8-0baf05d7129c" />
+
 ## Analyzing External Dependencies
 
 By default, the analyzer only includes packages from your module to keep the graph focused and manageable.
@@ -365,7 +367,7 @@ Ask your AI assistant questions like:
 ## Requirements
 
 - **Docker** (for Neo4j and MCP server)
-- **Go 1.21+** (for local development)
+- **Go 1.24+** (for local development)
 - **MCP-compatible client** (Claude Desktop, or other MCP clients)
 
 ## License
