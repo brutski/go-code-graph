@@ -439,6 +439,13 @@ func (r *RelationshipAnalyzer) resolveCallTarget(pkg *packages.Package, call *as
 
 			if method.Pkg() != nil {
 				receiverType := types.TypeString(recv, nil)
+				switch recv.(type) {
+				case *types.Named:
+					if !sel.Indirect() {
+						receiverType = "*" + receiverType
+					}
+				}
+
 				methodName := receiverType + "." + method.Name()
 				return GenerateNodeID(NodeTypeMethod, method.Pkg().Path(), methodName)
 			}

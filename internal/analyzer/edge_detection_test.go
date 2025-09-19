@@ -25,7 +25,7 @@ func TestAllEdgeTypes(t *testing.T) {
 	graph := NewGraph()
 	testPackages := []string{
 		"basic", "structural", "control", "errors",
-		"concurrency", "generics", "advanced",
+		"concurrency", "generics", "advanced", "pointer_receiver",
 	}
 
 	for _, pkg := range testPackages {
