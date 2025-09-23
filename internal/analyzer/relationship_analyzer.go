@@ -441,8 +441,10 @@ func (r *RelationshipAnalyzer) resolveCallTarget(pkg *packages.Package, call *as
 				receiverType := types.TypeString(recv, nil)
 				switch recv.(type) {
 				case *types.Named:
-					if !sel.Indirect() {
-						receiverType = "*" + receiverType
+					if sig, _ := method.Type().(*types.Signature); sig != nil {
+						if _, isPtr := deref(sig.Recv().Type()); isPtr {
+							receiverType = "*" + receiverType
+						}
 					}
 				}
 
@@ -1119,3 +1121,15 @@ func (r *RelationshipAnalyzer) AnalyzeTypeUsage(pkg *packages.Package, sourceID 
 // analyzeFieldShadowing removed - unused after shadow detection removal
 
 // checkStructFieldShadowing removed - unused after shadow detection removal
+
+// deref safely dereferences a type and returns whether it was a pointer
+func deref(typ types.Type) (types.Type, bool) {
+	if p, _ := types.Unalias(typ).(*types.Pointer); p != nil {
+		// p.base should never be nil, but be conservative
+		if p.Elem() == nil {
+			return types.Typ[types.Invalid], true
+		}
+		return p.Elem(), true
+	}
+	return typ, false
+}

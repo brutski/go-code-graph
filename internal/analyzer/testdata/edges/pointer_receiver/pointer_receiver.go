@@ -66,3 +66,25 @@ func TestValueCall() {
 	writer := BasicFileWriter{name: "test"}
 	writer.Write([]byte("value"))
 }
+
+// Test case for value receiver method (the regression case discovered by @hxiaodon)
+type AnotherFileWriter struct {
+	name string
+}
+
+// Value receiver method (not pointer)
+func (f AnotherFileWriter) Write(data []byte) error {
+	return nil
+}
+
+func TestValueReceiverMethod() {
+	// Create a value and call value receiver method
+	writer := AnotherFileWriter{name: "test"}
+	writer.Write([]byte("value"))  // Should create edge to AnotherFileWriter.Write (NOT *AnotherFileWriter.Write)
+}
+
+func TestPointerCallValueReceiver() {
+	// Create a pointer and call value receiver method
+	writer := &AnotherFileWriter{name: "test"}
+	writer.Write([]byte("value"))  // Should still create edge to AnotherFileWriter.Write (NOT *AnotherFileWriter.Write)
+}
